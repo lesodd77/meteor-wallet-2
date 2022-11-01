@@ -4,6 +4,7 @@ import { Plus } from './Plus'
 import { XMark } from './XMark'
 import { Bell } from './Bell'
 import { Select } from './Select'
+import { Check } from './Check'
 
 
 export {
@@ -13,4 +14,5 @@ export {
     XMark,
     Bell,
     Select,
+    Check,
 }

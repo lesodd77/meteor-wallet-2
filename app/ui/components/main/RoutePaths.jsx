@@ -5,6 +5,7 @@ export const RoutePaths = {
     CONTACTLIST: 'contactList',
     CONTACTFORM: 'contactForm',
     WALLET: 'wallet',
+    ACCESS: 'access',
   
 
 }

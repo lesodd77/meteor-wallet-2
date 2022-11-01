@@ -1,6 +1,8 @@
+import { Meteor } from 'meteor/meteor'
 import React, { Fragment, useEffect, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars, Plus, XMark , Bell} from '../logo/index'
+import { useLoggedUser } from 'meteor/quave:logged-user-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useTracker } from 'meteor/react-meteor-data';
@@ -30,14 +32,10 @@ function classNames(...classes) {
 }
 
 export const Navbar = () => {
- // const user = useTracker(() => Meteor.user());
+  const { loggedUser, isLoadingLoggedUser } = useLoggedUser();
+
   const navigate = useNavigate();
 
-  // const logout = () => {
-  //   Meteor.logout(() => {
-  //     navigate(RoutePaths.POSTFORM);
-  //   });
-  // };
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [theme, setTheme] = useState(null);
  const [query, setQuery] = useState('');
@@ -78,7 +76,7 @@ export const Navbar = () => {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
-                <div className="-ml-2 mr-2 flex items-center md:hidden">
+              <div className="-ml-2 mr-2 flex items-center md:hidden">
                   {/* Mobile menu button */}
                   <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                     <span className="sr-only">Open main menu</span>
@@ -90,6 +88,7 @@ export const Navbar = () => {
                   </Disclosure.Button>
                 </div>
                 <div className="flex flex-shrink-0 items-center">
+                  <a className='cursor-pointer' onClick={() => navigate('/')}>
                   <img
                     className="block h-8 w-auto lg:hidden"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
@@ -100,6 +99,7 @@ export const Navbar = () => {
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                     alt="Your Company"
                   />
+                  </a>
                 </div>
                 <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
                   {navigation.map((item) => (
@@ -119,14 +119,24 @@ export const Navbar = () => {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
+                  {!isLoadingLoggedUser && !loggedUser && ( 
                   <button
-                   onClick={() => console.log('sign up')}
+                   onClick={() => navigate(RoutePaths.ACCESS)}
                     type="button"
-                    className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
-                    <div className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-                   <span>Signup</span>
+                   <span className='text-lg font-serif font-medium'>Sign-up</span>
                   </button>
+      )}
+                 {!isLoadingLoggedUser && loggedUser && ( 
+                  <button
+                   onClick={() => Meteor.logout()}
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                 Log Out
+                  </button>
+      )} 
                 </div>
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
                   <button
@@ -136,7 +146,7 @@ export const Navbar = () => {
                     <span className="sr-only">View notifications</span>
                     <Bell className="h-6 w-6" aria-hidden="true" />
                   </button>
-{/*  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  */}
+
                   {/* Profile dropdown */}
                   <Menu as="div" className="relative ml-3">
                     <div>

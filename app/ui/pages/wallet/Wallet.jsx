@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-expressions */
-// @ts-nocheck
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { useSubscribe, useFind } from 'meteor/react-meteor-data';

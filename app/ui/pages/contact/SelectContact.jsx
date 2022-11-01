@@ -2,8 +2,7 @@
 // @ts-nocheck
 import React, { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
-import {  Select } from '../../components/logo/index';
-
+import {  Select, Check } from '../../components/logo/index';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -91,7 +90,7 @@ className="flex-shrink-0 h-6 w-6 rounded-full"
                               'absolute inset-y-0 right-0 flex items-center pr-4'
                             )}
                           >
-                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            <Check className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
                       </>
