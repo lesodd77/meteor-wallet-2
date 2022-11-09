@@ -1,13 +1,14 @@
 // @ts-nocheck
 import { Meteor } from 'meteor/meteor';
-import { ContactsCollection } from '../collections/ContactsCollection';
+import { PostsCollection } from '../collections/posts.collection';
 
-Meteor.publish('myContacts', function publishContacts() {
+
+Meteor.publish('myPosts', function publishAllPosts() {
     const { userId } = this;
     if (!userId) {
-        throw new Meteor.Error('Access denied');
+        throw Meteor.Error('Access denied');
     }
-    return ContactsCollection.find(
+    return PostsCollection.find(
         { userId, archived: { $ne: true } },
         {
             fields: {

@@ -1,18 +1,41 @@
-// @ts-nocheck
 import { Meteor } from 'meteor/meteor';
+// @ts-ignore
+import { Cloudinary } from 'meteor/socialize:cloudinary';
+
 import '../app/api/collections/TransactionsCollection';
 import '../app/api/methods/ContactsMethods';
 import '../app/api/methods/TransactionsMethods';
+import '../app/api/methods/RolesMethods';
 import '../app/api/publications/WalletsPublication';
 import '../app/api/publications/ContactsPublication';
 import '../app/api/collections/ContactsCollection';
-import { WalletsCollection } from '../app/api/collections/WalletsCollection';
+import '../app/api/collections/WalletsCollection';
 import '../infra/CustomError';
+import '../infra/accounts';
+import '../infra/roles';
 
-Meteor.startup(() => {
-  if (!WalletsCollection.find().count()) {
-     WalletsCollection.insert({
-   createdAt: new Date(),
-  });
-}
+
+const { settings } = Meteor;
+Cloudinary.config({
+  cloud_name: settings.public.cloudinary_cloud_name,
+  api_key: settings.public.cloudinary_api_key,
+  api_secret: settings.cloudinary_api_secret,
 });
+
+  // Rules are bound to the connection from which they are are executed. This means you have a userId available as this.userId if there is a logged in user. Throw a new Meteor.Error to stop the method from executing and propagate the error to the client. If rule is not set a standard error will be thrown.
+  Cloudinary.rules.delete = function (publicId) {
+    if (!this.userId && !publicId) throw new Meteor.Error('Not Authorized', "Sorry, you can't do that!");
+  };
+
+Cloudinary.rules.sign_upload = function () {
+  return true;
+    // if (!this.userId) throw new Meteor.Error("Not Authorized", "Sorry, you can't do that!")
+  };
+
+  Cloudinary.rules.private_resource = function (publicId) {
+    if (!this.userId && !publicId) throw new Meteor.Error('Not Authorized', "Sorry, you can't do that!");
+  };
+
+  Cloudinary.rules.download_url = function (publicId) {
+    if (!this.userId && !publicId) throw new Meteor.Error('Not Authorized', "Sorry, you can't do that!");
+  };

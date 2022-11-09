@@ -1,7 +1,12 @@
+
 import { Meteor } from 'meteor/meteor';
 import { WalletsCollection } from '../collections/WalletsCollection';
 
 
-Meteor.publish('wallets', function publishWallets() {
-    return WalletsCollection.find(); // live query
+Meteor.publish('myWallets', function publishAllWallets() {
+    const { userId } = this;
+    if (!userId) {
+        throw new Meteor.Error('Access denied');
+    }
+    return WalletsCollection.find({ userId });
 });

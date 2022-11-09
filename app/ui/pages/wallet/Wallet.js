@@ -1,3 +1,6 @@
+// @ts-nocheck
+/* eslint-disable import/no-unresolved */
+/* eslint-disable no-unused-expressions */
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { useSubscribe, useFind } from 'meteor/react-meteor-data';
@@ -11,10 +14,15 @@ import { Modal } from '../../components/modal/Modal';
 import { ContactsCollection } from '../../../api/collections/ContactsCollection';
 import { WalletsCollection } from '../../../api/collections/WalletsCollection';
 // eslint-disable-next-line import/no-unresolved
+import { useLoggedUser } from 'meteor/quave:logged-user-react';
+import { useNavigate } from 'react-router-dom';
+import { RoutePaths } from '../../components/main/RoutePaths';
 
 export const Wallet = () => {
-  const isLoadingContacts = useSubscribe('allContacts');
-  const isLoadingWallets = useSubscribe('wallets');
+  const navigate = useNavigate();
+  const { loggedUser } = useLoggedUser();
+  const isLoadingContacts = useSubscribe('myContacts');
+  const isLoadingWallets = useSubscribe('myWallets');
   const contacts = useFind(() =>
   ContactsCollection.find(
     { archived: { $ne: true } },
@@ -26,7 +34,7 @@ export const Wallet = () => {
   const [open, setOpen] = React.useState(false);
   const [isTransferring, setIsTransferring] = React.useState(false);
   const [amount, setAmount] = React.useState('0');
-  const [destinationWallet, setDestinationWallet] = React.useState({});
+  const [destinationContact, setDestinationContact] = React.useState({});
   const [errorMessage, setErrorMessage] = React.useState('');
 
 
@@ -34,7 +42,7 @@ export const Wallet = () => {
    Meteor.call('transactions.insert', {
    isTransferring,
    sourceWalletId: wallet._id,
-   destinationWalletId: destinationWallet?.walletId || '',
+   destinationContactId: destinationContact?._Id || '',
    amount: Number(amount),
    },
    (errorResponse) => {
@@ -48,7 +56,7 @@ export const Wallet = () => {
     }
     } else {
       setOpen(false);
-      setDestinationWallet({});
+      setDestinationContact({});
       setAmount('0');
       setErrorMessage('');
     }
@@ -56,6 +64,17 @@ export const Wallet = () => {
    );
  };
 
+
+if (!loggedUser) {
+  return (
+    <div>
+      <div>Welcome</div>
+      <div>
+         Please <a onClick={() => navigate(RoutePaths.ACCESS)}>sign-up</a>
+      </div>
+    </div>
+  );
+}
  if (isLoadingContacts() || isLoadingWallets()) {
   return <Loading />;
 }
@@ -67,18 +86,20 @@ return (
    <form className="flex-auto p-6">
      <div className="flex flex-wrap">
      <div className="w-full flex-none text-sm font-medium text-white">
-     Main account
+     Email
      </div>
      <div className="flex-auto text-sm font-medium text-white mt-2">
-     Wallet ID:
+    {loggedUser?.email}
      </div>
-      <div className='text-lg font-bold pr-3 text-white'>
+      <div className="text-lg font-bold pr-3 text-white">
         {wallet.balance}
       </div>
        <div className="text-lg font-bold text-white">
       {wallet.currency}
        </div>
-       <h1 className="w-full flex-none text-2xl font-semibold text-white mt-2">{wallet._id}</h1>
+       <h1 className="w-full flex-none text-2xl font-semibold text-white mt-2">
+        {wallet._id}
+       </h1>
      </div>
      <div className="flex space-x-4 text-sm font-medium">
        <div className="flex-auto flex space-x-4 mt-4">
@@ -119,8 +140,8 @@ return (
          <SelectContact
          title="Destination contact"
           contacts={contacts}
-         contact={destinationWallet}
-          setContact={setDestinationWallet}
+         contact={destinationContact}
+          setContact={setDestinationContact}
 
           />
        </div>

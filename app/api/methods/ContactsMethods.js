@@ -3,10 +3,14 @@ import { check } from 'meteor/check';
 import { ContactsCollection } from '../collections/ContactsCollection';
 
 Meteor.methods({
-    'contacts.insert'({ name, email, imageUrl, walletId }) {
+    'contacts.insert'({ name, email, image, walletId }) {
+      const { userId } = this;
+    if (!userId) {
+        throw new Meteor.Error('Access denied');
+    }
             check(name, String);
             check(email, String);
-            check(imageUrl, String);
+            check(image, String);
             check(walletId, String);
             if (!name) {
               throw new Meteor.Error('Name is required.');
@@ -17,9 +21,10 @@ Meteor.methods({
         return ContactsCollection.insert({
           name,
           email,
-           imageUrl,
+           image,
            walletId,
            createdAt: new Date(),
+           userId,
         });
       },
     'contacts.archive'({ contactId }) {

@@ -13,7 +13,7 @@ const ContactsSchema = new SimpleSchema({
         type: String,
         regEx: SimpleSchema.RegEx.Email,
       },
-      imageUrl: {
+      image: {
           type: String,
           optional: true,
       },
@@ -28,6 +28,9 @@ const ContactsSchema = new SimpleSchema({
    createdAt: {
        type: Date,
    },
+   userId: {
+    type: String,
+},
   });
 
 ContactsCollection.attachSchema(ContactsSchema);

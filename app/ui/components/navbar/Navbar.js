@@ -1,44 +1,47 @@
-import { Meteor } from 'meteor/meteor'
+// @ts-nocheck
+/* eslint-disable no-unused-vars */
+/* eslint-disable import/no-unresolved */
+/* eslint-disable no-tabs */
+import { Meteor } from 'meteor/meteor';
 import React, { Fragment, useEffect, useState } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars, Plus, XMark , Bell} from '../logo/index'
+import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Bars, XMark, Bell } from '../logo/index';
 import { useLoggedUser } from 'meteor/quave:logged-user-react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { useTracker } from 'meteor/react-meteor-data';
 import { useNavigate } from 'react-router-dom';
 import { RoutePaths } from '../main/RoutePaths';
+
 const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
   imageUrl:
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
+};
 const navigation = [
   { name: 'Home', href: '/', current: false },
   { name: 'Wallet', href: 'wallet', current: true },
-  { name: 'Contact', href: 'contactForm', current: false },
-  { name: 'ContactList', href: 'contactList', current: false },
-  { name: 'Calendar', href: '#', current: false },
-]
+  { name: 'Contact', href: 'contact-form', current: false },
+  { name: 'ContactList', href: 'contact-list', current: false },
+  { name: 'PostForm', href: 'post-form', current: false },
+  { name: 'PostList', href: 'post-list', current: false },
+];
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
-]
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(' ');
 }
 
 export const Navbar = () => {
   const { loggedUser, isLoadingLoggedUser } = useLoggedUser();
 
   const navigate = useNavigate();
-
-  const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [theme, setTheme] = useState(null);
- const [query, setQuery] = useState('');
+
 	useEffect(() => {
 		if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
 			setTheme('dark');
@@ -86,9 +89,9 @@ export const Navbar = () => {
                       <Bars className="block h-6 w-6" aria-hidden="true" />
                     )}
                   </Disclosure.Button>
-                </div>
+              </div>
                 <div className="flex flex-shrink-0 items-center">
-                  <a className='cursor-pointer' onClick={() => navigate('/')}>
+                  <a className="cursor-pointer" onClick={() => navigate('/')}>
                   <img
                     className="block h-8 w-auto lg:hidden"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
@@ -119,16 +122,16 @@ export const Navbar = () => {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  {!isLoadingLoggedUser && !loggedUser && ( 
+                  {!isLoadingLoggedUser && !loggedUser && (
                   <button
                    onClick={() => navigate(RoutePaths.ACCESS)}
                     type="button"
                     className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
-                   <span className='text-lg font-serif font-medium'>Sign-up</span>
+                   <span className="text-lg font-serif font-medium">Sign-up</span>
                   </button>
       )}
-                 {!isLoadingLoggedUser && loggedUser && ( 
+                 {!isLoadingLoggedUser && loggedUser && (
                   <button
                    onClick={() => Meteor.logout()}
                     type="button"
@@ -136,7 +139,7 @@ export const Navbar = () => {
                   >
                  Log Out
                   </button>
-      )} 
+      )}
                 </div>
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
                   <button
@@ -239,5 +242,5 @@ export const Navbar = () => {
         </>
       )}
     </Disclosure>
-  )
-}
+  );
+};
